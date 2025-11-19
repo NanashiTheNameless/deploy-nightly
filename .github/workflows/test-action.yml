@@ -10,6 +10,7 @@ jobs:
       - name: Deploy README to v1.0.0 to test functionality
         uses: ./
         with:
+          token: ${secrets.GITHUB_TOKEN}
           upload_url: https://uploads.github.com/repos/NanashiTheNameless/deploy-nightly/releases/263458763/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
           release_id: 263458763 # same as above (id can just be taken out the upload_url, it's used to find old releases)
           asset_path: ./README.md # path to archive to upload
