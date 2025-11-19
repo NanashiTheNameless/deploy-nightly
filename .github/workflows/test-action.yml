@@ -7,6 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Update release tag
+        uses: NanashiTheNameless/action-create-tag@main
+        with:
+          tag: "test-release"
+          tag_exists_error: false
+          force_push_tag: true
+          message: "test-release"
+
       - name: Deploy README to v1.0.0 to test functionality
         uses: ./
         with:
