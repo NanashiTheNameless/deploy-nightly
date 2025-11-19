@@ -4,7 +4,7 @@
 	"description": "Deploy an asset to a GitHub release with date and commit hash and delete old assets.",
 	"main": "index.js",
 	"dependencies": {
-		"@actions/core": "^1.10.0",
+		"@actions/core": "^1.11.1",
 		"@actions/exec": "^1.1.1",
 		"@actions/github": "^6.0.1"
 	},
