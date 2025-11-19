@@ -15,7 +15,6 @@ jobs:
           tag_exists_error: false
           force_push_tag: true
           message: "test-release"
-          github_token: ${{ secrets.GH_TOKEN }}
 
       - name: Deploy README to v1.0.0 to test functionality
         uses: ./
