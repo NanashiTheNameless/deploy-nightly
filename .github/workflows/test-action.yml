@@ -24,4 +24,4 @@ jobs:
           asset_path: ./README.md # path to archive to upload
           asset_name: test-nightly-upload-$$.md # name to upload the release as, use $$ to insert date (YYYYMMDD) and 6 letter commit hash
           asset_content_type: text/plain # required by GitHub API
-          max_releases: 1 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+          max_releases: 2 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
