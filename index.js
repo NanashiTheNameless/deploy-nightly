@@ -96,7 +96,7 @@ async function run() {
 		}
 
 		let now = new Date();
-		let date = now.getUTCFullYear().toString() + pad2((now.getUTCMonth() + 1).toString()) + pad2(now.getUTCDate().toString());
+		let date = `${now.getUTCFullYear()}.${pad2(now.getUTCMonth()+1)}.${pad2(now.getUTCDate())}`;
 
 		name = name.replace("$$", date + "-" + hash);
 
