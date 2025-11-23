@@ -52,7 +52,7 @@ async function run() {
 		const nameEnd = name.substring(placeholderStart + 2);
 
 		const octokit = getOctokit(token);
-		const hash = sha.substring(0, 6);
+		const hash = sha.substring(0, 7);
 		const [owner, repo] = owner_repo.split('/');
 
 		core.info("Checking previous assets");
