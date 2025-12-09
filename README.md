@@ -27,10 +27,10 @@ jobs:
 
       - name: Deploy Windows release
         if: matrix.os == 'windows-latest'
-        uses: WebFreak001/deploy-nightly@v3.2.0
+        uses: NanashiTheNameless/deploy-nightly@master
         with:
-          upload_url: https://uploads.github.com/repos/Pure-D/serve-d/releases/20717582/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
-          release_id: 20717582 # same as above (id can just be taken out the upload_url, it's used to find old releases)
+          upload_url: https://uploads.github.com/repos/<owner>/<repo>/releases/<ReleaseID>/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
+          release_id: <ReleaseID> # same as above (id can just be taken out the upload_url, it's used to find old releases)
           asset_path: ./myapp.zip # path to archive to upload
           asset_name: myapp_windows-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYY.MM.DD) and 7 letter commit hash
           asset_content_type: application/zip # required by GitHub API

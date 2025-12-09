@@ -8,7 +8,7 @@
 		"@actions/exec": "^1.1.1",
 		"@actions/github": "^6.0.1"
 	},
-	"author": "WebFreak001",
+	"author": "NanashiTheNameless (Upstream: WebFreak001)",
 	"license": "MIT",
 	"type": "module",
 	"devDependencies": {
