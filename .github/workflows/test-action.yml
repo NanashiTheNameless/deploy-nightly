@@ -1,5 +1,9 @@
 name: "Test deploy-nightly functionality"
-on: [push]
+
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   nightly:
