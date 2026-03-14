@@ -1,17 +1,17 @@
 {
-	"name": "deploy-nightly",
-	"version": "0.1.0",
-	"description": "Deploy an asset to a GitHub release with date and commit hash and delete old assets.",
-	"main": "index.js",
-	"dependencies": {
-		"@actions/core": "^3.0.0",
-		"@actions/exec": "^3.0.0",
-		"@actions/github": "^9.0.0"
-	},
-	"author": "NanashiTheNameless (Upstream: WebFreak001)",
-	"license": "MIT",
-	"type": "module",
-	"devDependencies": {
-		"@types/node": "^25.4.0"
-	}
+  "name": "deploy-nightly",
+  "version": "0.1.0",
+  "description": "Deploy an asset to a GitHub release with date and commit hash and delete old assets.",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.0.0"
+  },
+  "author": "NanashiTheNameless (Upstream: WebFreak001)",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^25.5.0"
+  }
 }
