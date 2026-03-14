@@ -1,6 +1,6 @@
 /**
  * This file is licensed under the MIT License.
- * 
+ *
  * Some code taken from https://github.com/actions/upload-release-asset
  */
 
@@ -10,9 +10,9 @@ import { getOctokit } from '@actions/github';
 import fs from "fs";
 
 /**
- * 
- * @param {InstanceType<typeof GitHub>} octokit 
- * @param {*} name 
+ *
+ * @param {InstanceType<typeof GitHub>} octokit
+ * @param {*} name
  */
 async function uploadAsset(octokit, name) {
 	const url = core.getInput("upload_url", { required: true });
