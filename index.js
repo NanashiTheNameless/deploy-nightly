@@ -19,15 +19,19 @@ async function uploadAsset(octokit, name) {
 	const assetPath = core.getInput("asset_path", { required: true });
 	const contentType = core.getInput("asset_content_type", { required: true });
 
-	const contentLength = filePath => fs.statSync(filePath).size;
+	const data = fs.readFileSync(assetPath);
 
-	const headers = { 'content-type': contentType, 'content-length': contentLength(assetPath) };
+	// content-length must equal the exact byte count of the body. Deriving it
+	// from the Buffer we actually send (rather than a separate fs.statSync call)
+	// guarantees a finite integer that matches the body, avoiding undici's
+	// "invalid content-length header" on any size mismatch.
+	const headers = { 'content-type': contentType, 'content-length': data.length };
 
 	const uploadAssetResponse = await octokit.rest.repos.uploadReleaseAsset({
 		url,
 		headers,
 		name,
-		data: fs.readFileSync(assetPath)
+		data
 	});
 
 	return uploadAssetResponse.data.browser_download_url;
