@@ -48,6 +48,8 @@ outputs:
     description: 'yes if a new upload has been made, no if the upload already existed'
   url:
     description: 'GitHub asset URL'
+  asset_name:
+    description: 'Final name the asset was uploaded as, with the $$ placeholder resolved'
 
 runs:
   using: 'node24'

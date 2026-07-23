@@ -19,13 +19,17 @@ async function uploadAsset(octokit, name) {
 	const assetPath = core.getInput("asset_path", { required: true });
 	const contentType = core.getInput("asset_content_type", { required: true });
 
-	const data = fs.readFileSync(assetPath);
+	// Sent as a Blob rather than the raw Buffer. uploads.github.com can answer
+	// with a 307/308, and undici re-sends the body on that hop; with a Buffer it
+	// has already detached the backing ArrayBuffer and dies with "Cannot perform
+	// ArrayBuffer.prototype.slice on a detached ArrayBuffer". A Blob is
+	// re-readable, so the redirected request succeeds.
+	const data = new Blob([fs.readFileSync(assetPath)], { type: contentType });
 
-	// content-length must equal the exact byte count of the body. Deriving it
-	// from the Buffer we actually send (rather than a separate fs.statSync call)
-	// guarantees a finite integer that matches the body, avoiding undici's
-	// "invalid content-length header" on any size mismatch.
-	const headers = { 'content-type': contentType, 'content-length': data.length };
+	// Do not set content-length here. fetch/undici derives it from the body it
+	// actually sends, and a manual value is *appended* to that one rather than
+	// replacing it, leaving undici to parseInt a joined "2464, 2464" string.
+	const headers = { 'content-type': contentType };
 
 	const uploadAssetResponse = await octokit.rest.repos.uploadReleaseAsset({
 		url,
@@ -130,6 +134,10 @@ async function run() {
 		core.setOutput("url", url);
 		core.setOutput("asset_name", name);
 	} catch (error) {
+		if (error.stack)
+			core.debug(error.stack);
+		if (error.cause)
+			core.debug("caused by: " + (error.cause.stack || error.cause.message));
 		core.setFailed(error.message);
 	}
 }

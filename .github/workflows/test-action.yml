@@ -21,11 +21,23 @@ jobs:
           message: "test-release"
 
       - name: Deploy README to v1.0.0 to test functionality
+        id: deploy
         uses: ./
         with:
+          ignore_hash: true # always exercise the upload path, even on a re-run of the same commit
           upload_url: https://uploads.github.com/repos/NanashiTheNameless/deploy-nightly/releases/263458763/assets{?name,label} # find out this value by opening https://api.github.com/repos/<owner>/<repo>/releases in your browser and copy the full "upload_url" value including the {?name,label} part
           release_id: 263458763 # same as above (id can just be taken out the upload_url, it's used to find old releases)
           asset_path: ./README.md # path to archive to upload
           asset_name: test-nightly-upload-$$.md # name to upload the release as, use $$ to insert date (YYYY.MM.DD) and 7 letter commit hash
           asset_content_type: text/plain # required by GitHub API
           max_releases: 2 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
+
+      - name: Assert the asset was actually uploaded
+        run: |
+          echo "uploaded=${{ steps.deploy.outputs.uploaded }}"
+          echo "asset_name=${{ steps.deploy.outputs.asset_name }}"
+          echo "url=${{ steps.deploy.outputs.url }}"
+          if [ "${{ steps.deploy.outputs.uploaded }}" != "yes" ]; then
+            echo "::error::action did not upload an asset, so the upload path was never tested"
+            exit 1
+          fi
