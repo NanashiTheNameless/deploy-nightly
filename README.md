@@ -34,6 +34,7 @@ jobs:
           asset_path: ./myapp.zip # path to archive to upload
           asset_name: myapp_windows-nightly-$$.zip # name to upload the release as, use $$ to insert date (YYYY.MM.DD) and 7 letter commit hash
           asset_content_type: application/zip # required by GitHub API
+          upload_timeout: 1800 # optional, seconds allowed for the upload including redirects (default: 30 minutes)
           max_releases: 7 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
           ignore_hash: true # optional, if there is already a release associated with the repo's current commit, should we go ahead and upload the asset anyway.
 ```

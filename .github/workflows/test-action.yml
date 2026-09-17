@@ -12,6 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Test upload transport locally
+        run: node --test test/upload.test.js
+
       - name: Update release tag
         uses: NanashiTheNameless/action-create-tag@main
         with:

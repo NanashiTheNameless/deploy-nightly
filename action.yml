@@ -22,6 +22,10 @@ inputs:
   asset_content_type:
     description: 'Content type of the uploaded file'
     required: true
+  upload_timeout:
+    description: 'Upload timeout in seconds, including redirects'
+    required: false
+    default: '1800'
   max_releases:
     description: 'Maximum number of historical releases with the given asset_name to keep'
     required: false

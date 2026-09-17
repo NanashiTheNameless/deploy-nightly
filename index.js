@@ -8,13 +8,14 @@ import * as core from "@actions/core";
 import { getOctokit } from '@actions/github';
 // import type { GitHub } from '@actions/github/lib/utils';
 import fs from "fs";
+import { EnvHttpProxyAgent, fetch } from 'undici';
 
 /**
  *
  * @param {InstanceType<typeof GitHub>} octokit
  * @param {*} name
  */
-async function uploadAsset(octokit, name) {
+async function uploadAsset(octokit, name, timeout) {
 	const url = core.getInput("upload_url", { required: true });
 	const assetPath = core.getInput("asset_path", { required: true });
 	const contentType = core.getInput("asset_content_type", { required: true });
@@ -31,14 +32,25 @@ async function uploadAsset(octokit, name) {
 	// replacing it, leaving undici to parseInt a joined "2464, 2464" string.
 	const headers = { 'content-type': contentType };
 
-	const uploadAssetResponse = await octokit.rest.repos.uploadReleaseAsset({
-		url,
-		headers,
-		name,
-		data
-	});
-
-	return uploadAssetResponse.data.browser_download_url;
+	// Large release assets can take longer than undici's default five-minute
+	// header timeout. Configure the upload transport itself, including proxies;
+	// an Octokit request.timeout option does not change fetch's header timeout.
+	const dispatcher = new EnvHttpProxyAgent({ headersTimeout: timeout });
+	try {
+		const uploadAssetResponse = await octokit.rest.repos.uploadReleaseAsset({
+			url,
+			headers,
+			name,
+			data,
+			request: {
+				fetch: (url, options) => fetch(url, { ...options, dispatcher }),
+				signal: AbortSignal.timeout(timeout)
+			}
+		});
+		return uploadAssetResponse.data.browser_download_url;
+	} finally {
+		await dispatcher.close();
+	}
 }
 
 async function run() {
@@ -54,6 +66,9 @@ async function run() {
 		const maxReleases = parseInt(core.getInput("max_releases", { required: false }));
 		const ignoreHash = core.getBooleanInput("ignore_hash", { required: false });
 		const releaseId = core.getInput("release_id", { required: true });
+		const uploadTimeout = Number(core.getInput("upload_timeout") || "1800") * 1000;
+		if (!Number.isSafeInteger(uploadTimeout) || uploadTimeout <= 0 || uploadTimeout > 2147483647)
+			throw new Error("upload_timeout must be a positive number of seconds, at most 2147483.647");
 		let name = core.getInput("asset_name", { required: true });
 		const placeholderStart = name.indexOf("$$");
 		const nameStart = name.substring(0, placeholderStart);
@@ -118,7 +133,7 @@ async function run() {
 		}
 
 		core.info("Uploading asset as file " + name);
-		let url = await uploadAsset(octokit, name);
+		let url = await uploadAsset(octokit, name, uploadTimeout);
 
 		core.info("Deleting " + toDelete.length + " old assets");
 		for (let i = 0; i < toDelete.length; i++) {
